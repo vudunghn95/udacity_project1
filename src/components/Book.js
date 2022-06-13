@@ -1,8 +1,27 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import Options from "./Options";
+import * as BooksAPI from "../BooksAPI";
 
 function Book(props) {
-  const { image, title, authors } = props;
+  const [shelfUpdate, setShelfUpdate] = useState({
+    shelf: ''
+  });
+
+  const { image, title, authors, bookId, onUpdate } = props;
+
+  useEffect(() => {
+    const shelfList = ["wantToRead", "currentlyReading", "read", "none"];
+    async function updateShelf(book, shelf) {
+      await BooksAPI.update(book, shelf);
+      if (onUpdate) {
+        onUpdate();
+      } 
+    }
+    if (shelfList.includes(shelfUpdate.shelf)) {
+      updateShelf(shelfUpdate, shelfUpdate.shelf);
+    }
+  }, [shelfUpdate, onUpdate]);
+
   return (
     <li>
       <div className="book">
@@ -15,10 +34,10 @@ function Book(props) {
               backgroundImage: `url(${image && image.smallThumbnail})`,
             }}
           ></div>
-          <Options />
+          <Options onUpdate={setShelfUpdate} bookId={bookId} shelfUpdate={shelfUpdate}/>
         </div>
         <div className="book-title">{title}</div>
-        <div className="book-authors">{authors.join(", ")}</div>
+        <div className="book-authors">{authors && authors.join(", ")}</div>
       </div>
     </li>
   );

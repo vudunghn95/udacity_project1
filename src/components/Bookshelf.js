@@ -2,8 +2,7 @@ import React from "react";
 import Book from "./Book";
 
 function Bookshelf(props) {
-  const { shelfTitle, books } = props;
-  console.log(shelfTitle, books);
+  const { shelfTitle, books, onUpdate } = props;
   return (
     <div className="bookshelf">
       <h2 className="bookshelf-title">{shelfTitle}</h2>
@@ -16,6 +15,8 @@ function Bookshelf(props) {
                 image={x.imageLinks}
                 title={x.title}
                 authors={x.authors}
+                onUpdate={onUpdate}
+                bookId={x.id}
               />
             );
           })}
